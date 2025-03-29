@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Gaming GUI</title>
+  <style>
+    /* Basic styling and dark theme */
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #1e1e1e;
+      color: #00ff00;
+      font-family: Arial, sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      transition: background-color 0.5s ease;
+    }
+    .container {
+      text-align: center;
+      transition: font-size 0.3s ease;
+      font-size: 16px;
+    }
+    h1 {
+      font-size: 48px;
+      margin-bottom: 50px;
+      text-shadow: 0 0 10px #00ff00;
+      transition: transform 0.5s ease;
+    }
+    .btn {
+      background-color: #333;
+      border: 2px solid #00ff00;
+      color: #fff;
+      font-size: 20px;
+      padding: 15px 30px;
+      margin: 10px;
+      cursor: pointer;
+      border-radius: 10px;
+      transition: transform 0.2s ease, background-color 0.2s ease, border-color 0.2s ease;
+    }
+    .btn:hover {
+      background-color: #444;
+      border-color: #00cc00;
+      transform: scale(1.1);
+    }
+    .btn:active {
+      background-color: #222;
+      transform: scale(0.95);
+    }
+    /* Modal styling */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 2;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0,0,0,0.8);
+    }
+    .modal-content {
+      background-color: #1e1e1e;
+      margin: 5% auto;
+      padding: 20px;
+      border: 2px solid #00ff00;
+      width: 80%;
+      max-height: 80%;
+      overflow-y: auto;
+      border-radius: 10px;
+      text-align: center;
+    }
+    .modal-content h2 {
+      margin-top: 0;
+    }
+    .close {
+      color: #00ff00;
+      float: right;
+      font-size: 28px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    /* Settings buttons styling */
+    .setting-btn {
+      background-color: #555;
+      border: 1px solid #00ff00;
+      color: #fff;
+      font-size: 16px;
+      padding: 10px 20px;
+      margin: 5px;
+      cursor: pointer;
+      border-radius: 5px;
+      transition: transform 0.2s ease, background-color 0.2s ease;
+    }
+    .setting-btn:hover {
+      background-color: #666;
+      transform: scale(1.05);
+    }
+    .setting-btn:active {
+      background-color: #444;
+      transform: scale(0.95);
+    }
+    /* Big reset button styling */
+    #resetBtn {
+      background-color: #aa0000;
+      border: 2px solid #ff0000;
+      color: #fff;
+      font-size: 24px;
+      padding: 15px 30px;
+      margin: 20px auto;
+      cursor: pointer;
+      border-radius: 10px;
+      display: block;
+      width: 50%;
+      transition: transform 0.2s ease, background-color 0.2s ease;
+    }
+    #resetBtn:hover {
+      background-color: #cc0000;
+      transform: scale(1.05);
+    }
+    #resetBtn:active {
+      background-color: #880000;
+      transform: scale(0.95);
+    }
+    /* Games modal styling */
+    #gamesContainer {
+      /* Remove flex and display items as block elements */
+      display: block;
+      text-align: left;
+    }
+    .game-item {
+      margin: 20px auto;
+      border: 2px solid #00ff00;
+      padding: 20px;
+      border-radius: 10px;
+      background-color: #333;
+      width: 100%; /* full width within the modal */
+      max-width: 500px;
+    }
+    .game-button {
+      background-color: #555;
+      border: 2px solid #00ff00;
+      color: #fff;
+      font-size: 24px;
+      padding: 20px 40px;
+      cursor: pointer;
+      border-radius: 10px;
+      transition: transform 0.2s ease, background-color 0.2s ease;
+      width: 100%;
+    }
+    .game-button:hover {
+      background-color: #666;
+      transform: scale(1.05);
+    }
+    .game-details {
+      margin-top: 20px;
+      padding: 0 20px;
+    }
+    .open-website-btn {
+      background-color: #00ff00;
+      border: none;
+      color: #1e1e1e;
+      font-size: 20px;
+      padding: 10px 20px;
+      cursor: pointer;
+      border-radius: 10px;
+      margin-top: 10px;
+      transition: transform 0.2s ease, background-color 0.2s ease;
+    }
+    .open-website-btn:hover {
+      background-color: #00cc00;
+      transform: scale(1.05);
+    }
+    .open-website-btn:active {
+      background-color: #009900;
+      transform: scale(0.95);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Gaming GUI</h1>
+    <!-- Main GUI Buttons -->
+    <button class="btn" id="gamesBtn">Games</button>
+    <button class="btn" id="optionsBtn">Options</button>
+    <button class="btn" id="settingsBtn">Settings</button>
+    <button class="btn" id="exitBtn">Exit</button>
+  </div>
+
+  <!-- Settings Modal -->
+  <div class="modal" id="settingsModal">
+    <div class="modal-content">
+      <span class="close" id="closeModal">&times;</span>
+      <h2>Settings</h2>
+      <div id="settingsContainer"></div>
+      <!-- Big Reset Button -->
+      <button id="resetBtn">Reset All</button>
+    </div>
+  </div>
+
+  <!-- Games Modal -->
+  <div class="modal" id="gamesModal">
+    <div class="modal-content">
+      <span class="close" id="closeGamesModal">&times;</span>
+      <h2>Games</h2>
+      <div id="gamesContainer"></div>
+    </div>
+  </div>
+
+  <script>
+    /***** SETTINGS SECTION *****/
+    window.rainbowActive = false;
+    window.rainbowInterval = null;
+    window.neonActive = false;
+    window.blinkActive = false;
+    window.blinkInterval = null;
+
+    var effects = [
+      {
+        name: "Rainbow GUI",
+        toggle: function() {
+          if (!window.rainbowActive) {
+            window.rainbowActive = true;
+            window.rainbowInterval = setInterval(function() {
+              document.body.style.backgroundColor = "hsl(" + Math.floor(Math.random() * 360) + ", 100%, 50%)";
+            }, 500);
+          } else {
+            window.rainbowActive = false;
+            clearInterval(window.rainbowInterval);
+            document.body.style.backgroundColor = "#1e1e1e";
+          }
+        }
+      },
+      {
+        name: "Neon Mode",
+        toggle: function() {
+          var title = document.querySelector('h1');
+          if (!window.neonActive) {
+            window.neonActive = true;
+            title.style.textShadow = "0 0 20px #00ff00, 0 0 30px #00ff00, 0 0 40px #00ff00";
+          } else {
+            window.neonActive = false;
+            title.style.textShadow = "0 0 10px #00ff00";
+          }
+        }
+      },
+      {
+        name: "Increase Font Size",
+        toggle: function() {
+          var container = document.querySelector('.container');
+          var currentSize = parseFloat(window.getComputedStyle(container).fontSize);
+          container.style.fontSize = (currentSize + 2) + "px";
+        }
+      },
+      {
+        name: "Decrease Font Size",
+        toggle: function() {
+          var container = document.querySelector('.container');
+          var currentSize = parseFloat(window.getComputedStyle(container).fontSize);
+          container.style.fontSize = Math.max(10, currentSize - 2) + "px";
+        }
+      },
+      {
+        name: "Toggle Title Visibility",
+        toggle: function() {
+          var title = document.querySelector('h1');
+          title.style.display = (title.style.display === "none") ? "block" : "none";
+        }
+      },
+      {
+        name: "Randomize Button Colors",
+        toggle: function() {
+          var buttons = document.querySelectorAll('.btn');
+          buttons.forEach(function(btn) {
+            btn.style.backgroundColor = '#' + Math.floor(Math.random() * 16777215).toString(16);
+          });
+        }
+      },
+      {
+        name: "Blink Buttons",
+        toggle: function() {
+          var buttons = document.querySelectorAll('.btn');
+          if (!window.blinkActive) {
+            window.blinkActive = true;
+            window.blinkInterval = setInterval(function() {
+              buttons.forEach(function(btn) {
+                btn.style.visibility = (btn.style.visibility === "hidden") ? "visible" : "hidden";
+              });
+            }, 300);
+          } else {
+            window.blinkActive = false;
+            clearInterval(window.blinkInterval);
+            buttons.forEach(function(btn) {
+              btn.style.visibility = "visible";
+            });
+          }
+        }
+      },
+      {
+        name: "Rotate Title",
+        toggle: function() {
+          var title = document.querySelector('h1');
+          title.classList.toggle('rotate');
+        }
+      },
+      {
+        name: "Glowing Border",
+        toggle: function() {
+          var container = document.querySelector('.container');
+          container.classList.toggle('glow');
+        }
+      },
+      {
+        name: "Invert Colors",
+        toggle: function() {
+          document.body.classList.toggle('invert');
+        }
+      }
+    ];
+
+    var settingsContainer = document.getElementById('settingsContainer');
+    for (var i = 1; i <= 100; i++) {
+      (function(i) {
+        var effect = effects[(i - 1) % effects.length];
+        var btn = document.createElement('button');
+        btn.className = 'setting-btn';
+        btn.innerText = "Setting " + i + ": " + effect.name;
+        btn.addEventListener('click', function() {
+          effect.toggle();
+        });
+        settingsContainer.appendChild(btn);
+      })(i);
+    }
+
+    function resetAll() {
+      if (window.rainbowActive) {
+        window.rainbowActive = false;
+        clearInterval(window.rainbowInterval);
+        document.body.style.backgroundColor = "#1e1e1e";
+      }
+      var title = document.querySelector('h1');
+      window.neonActive = false;
+      title.style.textShadow = "0 0 10px #00ff00";
+      var container = document.querySelector('.container');
+      container.style.fontSize = "16px";
+      title.style.display = "block";
+      var buttons = document.querySelectorAll('.btn');
+      buttons.forEach(function(btn) {
+        btn.style.backgroundColor = "#333";
+        btn.style.visibility = "visible";
+      });
+      if (window.blinkActive) {
+        window.blinkActive = false;
+        clearInterval(window.blinkInterval);
+      }
+      title.classList.remove('rotate');
+      container.classList.remove('glow');
+      document.body.classList.remove('invert');
+    }
+
+    document.getElementById('optionsBtn').addEventListener('click', function() {
+      alert("Opening options...");
+    });
+    document.getElementById('exitBtn').addEventListener('click', function() {
+      alert("Exiting...");
+      window.close();
+    });
+    
+    var settingsModal = document.getElementById('settingsModal');
+    var settingsBtn = document.getElementById('settingsBtn');
+    var closeModal = document.getElementById('closeModal');
+
+    settingsBtn.addEventListener('click', function() {
+      settingsModal.style.display = 'block';
+    });
+    closeModal.addEventListener('click', function() {
+      settingsModal.style.display = 'none';
+    });
+    window.addEventListener('click', function(event) {
+      if (event.target == settingsModal) {
+        settingsModal.style.display = 'none';
+      }
+    });
+    document.getElementById('resetBtn').addEventListener('click', function() {
+      resetAll();
+      alert("All settings have been reset.");
+    });
+
+    /***** GAMES SECTION *****/
+    var games = [
+      {
+        title: "Mason B Tools",
+        description: "A suite of handy tools and utilities designed by Mason B to simplify tasks.",
+        url: "https://masonbtools.vercel.app/"
+      },
+      {
+        title: "Mason's Project Sigma",
+        description: "An experimental project showcasing innovative ideas and creative solutions.",
+        url: "https://masonsproject-sigma.vercel.app/"
+      },
+      {
+        title: "Mason Tools Again",
+        description: "A refreshed collection of Mason's favorite tools, offering improved functionality.",
+        url: "https://masontoolsagain.vercel.app/"
+      },
+      {
+        title: "Mason Burns Monkey - Mason's Projects",
+        description: "A diverse portfolio of Mason's projects, featuring creative and technical endeavors.",
+        url: "https://masonburnsmonkey-masons-projects-69d9fc4c.vercel.app/"
+      },
+      {
+        title: "Blobk Blast Masons",
+        description: "An action-packed game featuring explosive gameplay and competitive challenges.",
+        url: "https://blobk-blast-masons.vercel.app"
+      },
+      {
+        title: "Masons 1v1",
+        description: "A head-to-head multiplayer challenge that tests your skills in a 1v1 showdown.",
+        url: "https://masons1v1.vercel.app/"
+      },
+      {
+        title: "Masons Dino Game",
+        description: "A fun, nostalgic dino-themed game with simple mechanics and exciting challenges.",
+        url: "https://masonsdinogame.vercel.app/index.html"
+      }
+    ];
+
+    var gamesContainer = document.getElementById('gamesContainer');
+    games.forEach(function(game) {
+      var gameItem = document.createElement('div');
+      gameItem.className = 'game-item';
+      
+      var gameButton = document.createElement('button');
+      gameButton.className = 'game-button';
+      gameButton.innerText = game.title;
+      
+      var gameDetails = document.createElement('div');
+      gameDetails.className = 'game-details';
+      gameDetails.style.display = 'none';
+      
+      var desc = document.createElement('p');
+      desc.innerText = game.description;
+      gameDetails.appendChild(desc);
+      
+      var openBtn = document.createElement('button');
+      openBtn.className = 'open-website-btn';
+      openBtn.innerText = "Open Website";
+      openBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        window.open(game.url, "_blank");
+      });
+      gameDetails.appendChild(openBtn);
+      
+      gameButton.addEventListener('click', function() {
+        gameDetails.style.display = (gameDetails.style.display === 'none') ? 'block' : 'none';
+      });
+      
+      gameItem.appendChild(gameButton);
+      gameItem.appendChild(gameDetails);
+      gamesContainer.appendChild(gameItem);
+    });
+
+    var gamesModal = document.getElementById('gamesModal');
+    var gamesBtn = document.getElementById('gamesBtn');
+    var closeGamesModal = document.getElementById('closeGamesModal');
+
+    gamesBtn.addEventListener('click', function() {
+      gamesModal.style.display = 'block';
+    });
+    closeGamesModal.addEventListener('click', function() {
+      gamesModal.style.display = 'none';
+    });
+    window.addEventListener('click', function(event) {
+      if (event.target == gamesModal) {
+        gamesModal.style.display = 'none';
+      }
+    });
+  </script>
+</body>
+</html>
